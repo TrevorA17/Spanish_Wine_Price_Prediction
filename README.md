@@ -1,2 +1,2 @@
-# Spanish_Wine_Quality_Prediction
-Predicting Model wine quality based on reviews and description
+# Spanish Wine Price Prediction
+Predicting Model wine prices based on reviews and description
