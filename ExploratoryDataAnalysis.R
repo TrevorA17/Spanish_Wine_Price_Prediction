@@ -104,3 +104,62 @@ cor_matrix <- cor(wine_data[, c("rating", "num_reviews", "price")], use = "compl
 print("Correlation Matrix:")
 print(cor_matrix)
 
+# Load necessary packages
+library(dplyr)
+library(car)  # For Levene's Test
+library(ggplot2)  # For visualizing residuals
+
+
+# Convert year to numeric, handling "N.V." and other non-numeric values
+wine_data$year <- ifelse(wine_data$year == "N.V.", NA, as.integer(wine_data$year))
+
+# ANOVA: Effect of wine type on price
+anova_type <- aov(price ~ type, data = wine_data)
+summary(anova_type)
+
+# ANOVA: Effect of region on price
+anova_region <- aov(price ~ region, data = wine_data)
+summary(anova_region)
+
+# Check assumptions for ANOVA on type
+
+# 1. Normality of residuals
+par(mfrow = c(2, 2))
+plot(anova_type)
+shapiro.test(residuals(anova_type))
+
+# 2. Homogeneity of variances
+leveneTest(price ~ type, data = wine_data)
+
+# Check assumptions for ANOVA on region
+
+# 1. Normality of residuals
+par(mfrow = c(2, 2))
+plot(anova_region)
+shapiro.test(residuals(anova_region))
+
+# 2. Homogeneity of variances
+leveneTest(price ~ region, data = wine_data)
+
+# If significant, perform post-hoc test (Tukey HSD)
+if (summary(anova_type)[[1]]$`Pr(>F)`[1] < 0.05) {
+  post_hoc_type <- TukeyHSD(anova_type)
+  print(post_hoc_type)
+}
+
+if (summary(anova_region)[[1]]$`Pr(>F)`[1] < 0.05) {
+  post_hoc_region <- TukeyHSD(anova_region)
+  print(post_hoc_region)
+}
+
+# Visualization of results
+# Boxplot of price by type
+ggplot(wine_data, aes(x = type, y = price)) +
+  geom_boxplot() +
+  labs(title = "Boxplot of Price by Wine Type", x = "Wine Type", y = "Price")
+
+# Boxplot of price by region
+ggplot(wine_data, aes(x = region, y = price)) +
+  geom_boxplot() +
+  labs(title = "Boxplot of Price by Region", x = "Region", y = "Price")
+
