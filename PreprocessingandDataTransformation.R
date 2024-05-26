@@ -54,4 +54,19 @@ aggr_plot <- aggr(wine_data, col = c('navyblue', 'red'), numbers = TRUE, sortVar
 gg_miss_var(wine_data, show_pct = TRUE) +
   labs(title = "Missing Values by Variable")
 
+# Load necessary packages
+library(dplyr)
+library(tidyr)
 
+# Remove rows with missing values
+wine_data_clean <- wine_data %>%
+  drop_na()
+
+# Display the structure of the cleaned dataset
+str(wine_data_clean)
+
+# View the first few rows of the cleaned dataset
+head(wine_data_clean)
+
+# Total number of missing values
+sum(is.na(wine_data_clean))
