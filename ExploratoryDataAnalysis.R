@@ -163,3 +163,62 @@ ggplot(wine_data, aes(x = region, y = price)) +
   geom_boxplot() +
   labs(title = "Boxplot of Price by Region", x = "Region", y = "Price")
 
+
+# Load necessary packages
+library(ggplot2)
+library(reshape2)
+
+
+# Convert year to numeric, handling "N.V." and other non-numeric values
+wine_data$year <- ifelse(wine_data$year == "N.V.", NA, as.integer(wine_data$year))
+
+# Univariate Plots
+
+# Histogram for price
+ggplot(wine_data, aes(x = price)) +
+  geom_histogram(binwidth = 50, fill = "blue", color = "black") +
+  labs(title = "Histogram of Wine Prices", x = "Price", y = "Frequency")
+
+# Boxplot for price
+ggplot(wine_data, aes(y = price)) +
+  geom_boxplot(fill = "lightblue") +
+  labs(title = "Boxplot of Wine Prices", y = "Price")
+
+# Bar plot for type
+ggplot(wine_data, aes(x = type)) +
+  geom_bar(fill = "orange") +
+  labs(title = "Bar Plot of Wine Types", x = "Wine Type", y = "Count")
+
+# Multivariate Plots
+
+# Scatter plot for rating vs. price
+ggplot(wine_data, aes(x = rating, y = price)) +
+  geom_point(color = "blue", alpha = 0.5) +
+  labs(title = "Scatter Plot of Rating vs. Price", x = "Rating", y = "Price")
+
+# Boxplot of price by type
+ggplot(wine_data, aes(x = type, y = price)) +
+  geom_boxplot(fill = "lightgreen") +
+  labs(title = "Boxplot of Price by Wine Type", x = "Wine Type", y = "Price")
+
+# Boxplot of price by region
+ggplot(wine_data, aes(x = region, y = price)) +
+  geom_boxplot(fill = "lightcoral") +
+  labs(title = "Boxplot of Price by Region", x = "Region", y = "Price") +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))
+
+# Correlation matrix heatmap
+
+# Compute correlation matrix
+cor_matrix <- cor(wine_data[, c("rating", "num_reviews", "price")], use = "complete.obs")
+
+# Melt the correlation matrix into long format
+melted_cor_matrix <- melt(cor_matrix)
+
+# Plot heatmap
+ggplot(melted_cor_matrix, aes(x = Var1, y = Var2, fill = value)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "blue", high = "red", mid = "white", midpoint = 0) +
+  labs(title = "Correlation Matrix Heatmap", x = "", y = "") +
+  theme_minimal()
+
