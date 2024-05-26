@@ -41,3 +41,25 @@ test_data <- subset(wine_data_clean, split == FALSE)
 # Display the structure of the training and testing sets
 dim(test_data)
 dim(train_data)
+
+# Load necessary packages
+library(boot)
+
+# Ensure reproducibility
+set.seed(123)
+
+# Function to calculate the statistic of interest
+bootstrap_stat <- function(data, indices) {
+  sample_data <- data[indices, ]  # Resample with replacement
+  return(mean(sample_data$price)) # Calculate the mean of the price variable
+}
+
+# Perform bootstrapping
+bootstrap_results <- boot(data = wine_data_clean, statistic = bootstrap_stat, R = 1000)
+
+# Summary of bootstrap results
+print(bootstrap_results)
+
+# Plot the bootstrap distribution
+plot(bootstrap_results)
+
