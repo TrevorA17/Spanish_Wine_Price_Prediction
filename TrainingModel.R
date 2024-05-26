@@ -63,44 +63,6 @@ print(bootstrap_results)
 # Plot the bootstrap distribution
 plot(bootstrap_results)
 
-library(caret)
-library(dplyr)
 
-# Ensure reproducibility
-set.seed(123)
 
-# Define the number of folds
-k <- 10
-
-# Create a train control object
-train_control <- trainControl(method = "cv", number = k)
-
-# Load necessary packages
-library(dplyr)
-
-# Remove variables "year" and "rating" while keeping "price"
-wine_data_clean_price <- select(wine_data_clean, -year, -rating, -price)
-
-# Ensure 'price' is a factor
-wine_data_clean_price$price <- as.factor(wine_data_clean_price$price)
-
-# Ensure 'price' has more than one level
-if (length(levels(wine_data_clean_price$price)) <= 1) {
-  stop("The 'price' variable has only one level. Please check your data.")
-}
-
-# Display the structure of the new dataset
-str(wine_data_clean_price)
-
-# Train the model using k-fold cross-validation
-model <- train(price ~ ., data = wine_data_clean_price, method = "lm", trControl = train_control)
-
-# Print model summary
-print(model)
-
-# Print cross-validation results
-print(model$resample)
-
-# Plot cross-validation results
-boxplot(model$resample$RMSE, main = "RMSE for each fold", ylab = "RMSE")
 
