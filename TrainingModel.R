@@ -91,6 +91,7 @@ log_reg_model <- train(type ~ ., data = train_data, method = "multinom", trContr
 # Decision Tree
 dt_model <- train(type ~ ., data = train_data, method = "rpart", trControl = train_control)
 
+
 # KNN Classification
 knn_model <- train(type ~ ., data = train_data, method = "knn", trControl = train_control, tuneLength = 10)
 
@@ -98,3 +99,19 @@ knn_model <- train(type ~ ., data = train_data, method = "knn", trControl = trai
 print(log_reg_model)
 print(dt_model)
 print(knn_model)
+
+# Compare model performances using resampling
+results <- resamples(list(
+  Logistic_Regression = log_reg_model,
+  Decision_Tree = dt_model,
+  KNN = knn_model
+))
+
+# Summary of the results
+summary(results)
+
+# Boxplots of the results
+bwplot(results)
+
+# Dot plots of the results
+dotplot(results)
