@@ -11,11 +11,11 @@ loaded_dt_model <- readRDS("./models/dt_model.rds")
 
 # Prepare new data for prediction (example data, adjust according to your dataset)
 new_data <- data.frame(
-  winery = factor("Teso La Monja", levels = levels(train_data$winery)),
-  wine = factor("Tinto", levels = levels(train_data$wine)),
+  winery = "Teso La Monja",
+  wine = "Tinto",
   rating = 4.8,
   num_reviews = 100,
-  region = factor("Toro", levels = levels(train_data$region)),
+  region = "Toro",
   body = factor(5, levels = levels(train_data$body)),
   acidity = factor(3, levels = levels(train_data$acidity)),
   price = 50.0
