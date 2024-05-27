@@ -70,3 +70,12 @@ head(wine_data_clean)
 
 # Total number of missing values
 sum(is.na(wine_data_clean))
+
+# Load necessary libraries
+library(dplyr)
+
+# Drop the 'year' and 'country' columns from the dataset
+wine_data_clean <- wine_data_clean %>% select(-year, -country)
+
+# Verify that the columns have been removed
+str(wine_data_clean)

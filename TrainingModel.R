@@ -63,6 +63,38 @@ print(bootstrap_results)
 # Plot the bootstrap distribution
 plot(bootstrap_results)
 
+# Ensure 'type' is a factor
+wine_data_clean$type <- as.factor(wine_data_clean$type)
 
+# Load necessary packages
+library(caret)
 
+# Split the data into training and testing sets
+set.seed(123)  # For reproducibility
+train_index <- createDataPartition(wine_data_clean$type, p = 0.8, list = FALSE)
+train_data <- wine_data_clean[train_index, ]
+test_data <- wine_data_clean[-train_index, ]
 
+# Remove factor variables with only one level
+single_level_factors <- sapply(train_data, function(x) is.factor(x) && length(unique(x)) == 1)
+train_data <- train_data[, !single_level_factors]
+
+# Ensure the same columns are removed from test_data
+test_data <- test_data[, colnames(train_data)]
+
+# Define the training control
+train_control <- trainControl(method = "cv", number = 10)
+
+# Logistic Regression
+log_reg_model <- train(type ~ ., data = train_data, method = "multinom", trControl = train_control)
+
+# Decision Tree
+dt_model <- train(type ~ ., data = train_data, method = "rpart", trControl = train_control)
+
+# KNN Classification
+knn_model <- train(type ~ ., data = train_data, method = "knn", trControl = train_control, tuneLength = 10)
+
+# Display model results
+print(log_reg_model)
+print(dt_model)
+print(knn_model)
